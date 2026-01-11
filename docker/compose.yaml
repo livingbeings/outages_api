@@ -9,11 +9,8 @@ services:
       dockerfile: docker/Dockerfile
     ports:
       - "8000:8000"
-    environment:
-      - MONGO_URL=mongodb://mongodb:27017
-      - DB_NAME=outages_db
     env_file:
-      - .env.example
+      - .env
     depends_on:
       - mongodb
     networks:

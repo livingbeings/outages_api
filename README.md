@@ -25,8 +25,8 @@ This project implements a backend service to aggregate continuous outage reports
    - Using `motor` allows non-blocking database operations, essential for a high-performance FastAPI application.
 
 3. **API Structure**:
-   - `POST /outages`: Accepts a single outage record.
-   - `GET /events`: Supports filtering by controller, type, and time range.
+   - `POST api/v1/outages`: Accepts a single outage record.
+   - `GET api/v1/events`: Supports filtering by controller, type, and time range.
 
 ## Documentation
 
@@ -36,7 +36,7 @@ A sequence diagram describing the system flow is available in `docs/diagram.puml
 
 ### Local Setup
 
-1. **Prerequisites**: Python 3.9+, MongoDB running locally.
+1. **Prerequisites**: Python 3.10+, MongoDB running locally.
 2. **Install Dependencies**:
    ```bash
    pip install -r requirements.txt
@@ -76,7 +76,7 @@ docker compose up --build
 
 **Ingest Outages:**
 ```json
-POST /outages
+POST api/v1/outages
 {
   "controller_id": "ctrl_1",
   "outage_type": "panel_outage",
@@ -86,7 +86,7 @@ POST /outages
 
 **Query Events:**
 ```
-GET /events?controller_id=ctrl_1&start_time=2023-10-27T00:00:00
+GET api/v1/events?controller_id=ctrl_1&start_time=2023-10-27T00:00:00
 ```
 
 ## To Do List
