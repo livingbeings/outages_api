@@ -3,6 +3,7 @@ version: '3.8'
 services:
   # Server Container
   server:
+    image: us-central1-docker.pkg.dev/cloudtesting-330202/outage-api/outage_api:latest
     build: 
       context: ..
       dockerfile: docker/Dockerfile
