@@ -71,14 +71,6 @@ A sequence diagram describing the system flow is available in `docs/diagram.puml
    docker compose -f docker/compose.yaml up -d
    ```
 
-### Docker Compose Setup (Recommended)
-
-Run the entire stack (App + MongoDB) with a single command:
-
-```bash
-docker compose up --build
-```
-
 ## API Usage Examples
 
 **Ingest Outages:**
