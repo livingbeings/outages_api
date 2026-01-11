@@ -20,6 +20,32 @@ async def process_record(record: OutageRecord,response:Response):
     collection = db.outage_events
     record.timestamp=record.timestamp.replace(tzinfo=None)
 
+    after_event_doc = await collection.find_one(
+        filter={
+            "controller_id": record.controller_id,
+            "outage_type": record.outage_type.value,
+            "start_time": {
+                "$gt": record.timestamp,
+            }
+        },
+        sort=[("start_time", 1)]
+    )
+
+    before_event_doc = await collection.find_one(
+        filter={
+            "controller_id": record.controller_id,
+            "outage_type": record.outage_type.value,
+            "end_time": {
+                "$lt": record.timestamp
+            }
+        },
+        sort=[("end_time", -1)]
+    )
+    #TODO: process before_event_doc to update start_time
+    #TODO: process after_event_doc to update start_time
+    #TODO: merge intersected start_time and end_time to be one event
+
+    
     last_event_doc = await collection.find_one(
         filter={
             "controller_id": record.controller_id,
