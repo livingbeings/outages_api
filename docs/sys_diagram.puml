@@ -1,0 +1,28 @@
+@startuml
+allowmixing
+
+node "Docker Host" {
+    package "Docker Network: app-network" {
+        component "Server (FastAPI)" as Server
+        database "MongoDB" as Mongo
+    }
+}
+
+actor Client
+
+Client --> Server : HTTP:8000
+Client ..> Mongo : TCP:27017 (Optional direct access)
+
+Server -> Mongo : TCP:27017\nmongodb://mongodb:27017
+
+note right of Server
+  Port: 8000:8000
+  Env: MONGO_URL=mongodb://mongodb:27017
+end note
+
+note right of Mongo
+  Port: 27017:27017
+  Image: mongo:latest
+end note
+
+@enduml

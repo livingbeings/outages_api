@@ -1,5 +1,12 @@
 # Outage API
 
+## System Diagram
+![Alt text](docs/sys_diagram.svg)
+
+## Sequential Diagram
+![Alt text](docs/seq_diagram.svg)
+
+
 ## Overview
 
 This project implements a backend service to aggregate continuous outage reports from LED controllers into grouped outage events. It provides a RESTful API to ingest outage records and query aggregated events.
