@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Server Container
+  server:
+    build: 
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017
+      - DB_NAME=outages_db
+    env_file:
+      - .env.example
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  # MongoDB Container
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+

@@ -1,0 +1,66 @@
+@startuml
+actor Client
+participant "FastAPI (Main)" as API
+participant "Processor" as Processor
+database "MongoDB" as DB
+
+== Ingest Outage Record ==
+Client -> API: POST /api/v1/outages\n(OutageRecord)
+activate API
+
+API -> Processor: process_record(record)
+activate Processor
+
+Processor -> DB: find_one(controller_id, outage_type)\n(Sort by end_time DESC)
+activate DB
+DB --> Processor: latest_event (or null)
+deactivate DB
+
+alt latest_event exists
+    Processor -> Processor: Calculate diff (record.timestamp - latest_event.end_time)
+    
+    alt 0 < diff <= TOLERANCE_MINUTES
+        Processor -> DB: update_one(_id, set end_time=timestamp)
+        activate DB
+        DB --> Processor: success
+        deactivate DB
+        Processor --> API: {"message": "Updated ..."}
+    else diff < 0 OR diff == 0
+        Processor --> API: 409 Conflict\n{"message": "Receiving older/duplicated record"}
+    else gap > TOLERANCE_MINUTES
+        Processor -> DB: insert_one(new_event)
+        activate DB
+        DB --> Processor: success
+        deactivate DB
+        Processor --> API: {"message": "Processed ..."}
+    end
+else No previous event
+    Processor -> DB: insert_one(new_event)
+    activate DB
+    DB --> Processor: success
+    deactivate DB
+    Processor --> API: {"message": "Processed ..."}
+end
+
+deactivate Processor
+
+alt Success
+    API --> Client: 202 Accepted\nJSON Message
+else Conflict
+    API --> Client: 409 Conflict\nJSON Message
+end
+deactivate API
+
+== Query Outage Events ==
+Client -> API: GET /api/v1/events?filters
+activate API
+
+API -> DB: find(query)\n(Filter by time, type, controller)
+activate DB
+DB --> API: List[OutageEvent]
+deactivate DB
+
+API --> Client: 200 OK\n(JSON List)
+deactivate API
+
+@enduml
