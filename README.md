@@ -1,5 +1,8 @@
 # Outage API
 
+## Demo
+https://outage-api-13288134997.us-central1.run.app/
+
 ## System Diagram
 ![Alt text](docs/sys_diagram.svg)
 
@@ -89,7 +92,9 @@ GET api/v1/events?controller_id=ctrl_1&start_time=2023-10-27T00:00:00
 ```
 
 ## To Do List
-1. **GCP Deployment with Git Action**  
+- [x] **GCP Deployment with Git Action**  
+Upload image manually to gcp artifact and deploy to Cloud Run
+- [ ] **Git Action Integration**  
 Git action could be configured to upload to gcp artifact on receiving any git tag or and push to master. Then Cloud Run or App Engine can auto load newer image based on latest version in artifact
-2. **Assumption Handling**   
+- [ ] **Assumption Handling**   
 At this state, the controller is assumed to only upload latest record. However, it is still possible for the controller to upload older record and it still needed to be handled to properly store a complete historical data of outage event.
