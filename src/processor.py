@@ -38,7 +38,7 @@ async def process_record(record: OutageRecord,response:Response):
                 {"_id": last_event_doc["_id"]},
                 {"$set": {"end_time": record.timestamp}}
             )
-            return {"message": f"Updated {record}"}
+            return {"message": f"Updated {record.model_dump_json()}"}
         
         if diff_seconds < 0:
             response.status_code=status.HTTP_409_CONFLICT
@@ -57,4 +57,4 @@ async def process_record(record: OutageRecord,response:Response):
     
     event_dict = new_event.model_dump(by_alias=True, exclude={"id"})
     await collection.insert_one(event_dict)
-    return {"message": f"Processed {record}"}
+    return {"message": f"Processed {record.model_dump_json()}"}
